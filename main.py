@@ -10,11 +10,14 @@ def Download(file, name):
     path = "https://raw.githubusercontent.com/" + GITHUB_USERNAME + "/" + GITHUB_REPOSITORY + "/master/" + file
     r = requests.get(path)
     if r.status_code == 200:
-        with open(name, 'x') as fi:
-            fi.write(r.text)
+        try:
+            with open(name, 'x') as fi:
+                fi.write(r.text)
+        except FileExistsError:
+            with open(name, "w") as fi:
+                fi.write(r.text)
     else:
         print("Couldn't download file: " + file)
-    print(r.text)
 
 
 if __name__ == '__main__':
@@ -31,6 +34,7 @@ if __name__ == '__main__':
     with open('Data/version.txt', 'r') as f:
         newVersion = f.read()
 
+    print("saved version: " + version + "\nnew version: " + newVersion)
     version = version.split('.')
     newVersion = newVersion.split('.')
 
@@ -42,4 +46,6 @@ if __name__ == '__main__':
         print("Patch")
 
     if not version == newVersion:
-        Download("main.exe", "main.exe")
+        wget.download("https://raw.githubusercontent.com/" + GITHUB_USERNAME + "/" + GITHUB_REPOSITORY + "/master/main.exe", "main.exe")
+
+    a = input("Press enter to continue")
